@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myfirstapp/add_transaction.dart';
 
 class DashboardPage extends StatelessWidget {
@@ -10,9 +11,9 @@ class DashboardPage extends StatelessWidget {
     String currentMonth = DateFormat('MMMM').format(DateTime.now());
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.white, // White Background
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.menu, color: Colors.black),
@@ -28,7 +29,7 @@ class DashboardPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F3D5F),
+                color: const Color(0xFF000957), // Changed to Given Blue
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -36,23 +37,30 @@ class DashboardPage extends StatelessWidget {
                 children: [
                   Text(
                     '〈 $currentMonth 〉',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: GoogleFonts.poppins(
+                      color: Colors.white, // White Text
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 15),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween, // Aligned Left & Right
+                    children: [
                       Text(
-                        'Income  ',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        'Income',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white, // White Text
+                          fontSize: 18,
+                        ),
                       ),
                       Text(
                         'Expense',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: GoogleFonts.poppins(
+                          color: Colors.white, // White Text
+                          fontSize: 18,
+                        ),
                       ),
                     ],
                   ),
@@ -61,66 +69,81 @@ class DashboardPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Recent Transactions Title
-            const Text(
-              'Recent transactions',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF0F3D5F),
+            // Recent Transactions (Title & List in Same Box)
+            Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFF000957), // Changed to Given Blue
+                borderRadius: BorderRadius.circular(20),
               ),
-            ),
-            const SizedBox(height: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title inside the box
+                  Text(
+                    'Recent Transactions',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white, // White Text
+                    ),
+                  ),
+                  const SizedBox(height: 10),
 
-            // Transactions List
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: ListView(
-                  children: const [
-                    TransactionTile(
-                      title: 'Grocery Shopping',
-                      amount: '- \$50',
-                      isExpense: true,
+                  // Transactions List
+                  Column(
+                    children: const [
+                      TransactionTile(
+                          title: 'Grocery Shopping',
+                          amount: '- Rs 50',
+                          isExpense: true),
+                      TransactionTile(
+                          title: 'Salary',
+                          amount: '+ Rs 2000',
+                          isExpense: false),
+                      TransactionTile(
+                          title: 'Electric Bill',
+                          amount: '- Rs 100',
+                          isExpense: true),
+                      TransactionTile(
+                          title: 'Freelance Work',
+                          amount: '+ Rs 500',
+                          isExpense: false),
+                    ],
+                  ),
+
+                  // View More Button (Moved Upwards)
+                  Transform.translate(
+                    offset: const Offset(0, -5), // Move text up slightly
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'View More',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white, // White Text
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Icon(Icons.keyboard_arrow_down,
+                              color: Colors.white), // Bottom arrow white
+                        ],
+                      ),
                     ),
-                    TransactionTile(
-                      title: 'Salary',
-                      amount: '+ \$2000',
-                      isExpense: false,
-                    ),
-                    TransactionTile(
-                      title: 'Electric Bill',
-                      amount: '- \$100',
-                      isExpense: true,
-                    ),
-                    TransactionTile(
-                      title: 'Freelance Work',
-                      amount: '+ \$500',
-                      isExpense: false,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
+
+      // Updated Bottom Navigation Bar
       bottomNavigationBar: BottomNavBar(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddTransactionPage()),
-          );
-        },
-        child: const Icon(Icons.add, color: Colors.black),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -145,10 +168,12 @@ class TransactionTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 16)),
+          Text(title,
+              style: GoogleFonts.poppins(
+                  fontSize: 16, color: Colors.white)), // White Text
           Text(
             amount,
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: isExpense ? Colors.red : Colors.green,
@@ -160,24 +185,50 @@ class TransactionTile extends StatelessWidget {
   }
 }
 
-// Bottom Navigation Bar
+// Bottom Navigation Bar with Plus Button Inside White Circle
 class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
       shape: const CircularNotchedRectangle(),
       notchMargin: 10,
-      color: const Color(0xFF0F3D5F),
+      color: const Color(0xFF000957), // Set bottom bar color to blue
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, // Space icons evenly
         children: [
           IconButton(
-            icon: const Icon(Icons.home, color: Colors.white),
+            icon: const Icon(Icons.home,
+                color: Colors.white, size: 35), // Larger icon
             onPressed: () {},
           ),
-          const SizedBox(width: 50), // Space for Floating Action Button
+
+          // Add Button inside a White Circle
+          Container(
+            height: 55,
+            width: 55,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white, // White background
+            ),
+            child: Center(
+              child: IconButton(
+                icon: const Icon(Icons.add,
+                    color: Color(0xFF000957),
+                    size: 35), // Centered & Larger icon
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddTransactionPage()),
+                  );
+                },
+              ),
+            ),
+          ),
+
           IconButton(
-            icon: const Icon(Icons.pie_chart, color: Colors.white),
+            icon: const Icon(Icons.pie_chart,
+                color: Colors.white, size: 35), // Larger icon
             onPressed: () {},
           ),
         ],
