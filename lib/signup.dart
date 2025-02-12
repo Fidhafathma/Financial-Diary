@@ -2,15 +2,14 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
 
-/*class SignupPage extends StatefulWidget {
+
+class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
-}*/
+}
 
-/*class _SignupPageState extends State<SignupPage> {
+class _SignupPageState extends State<SignupPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
@@ -37,7 +36,7 @@ class SignupPage extends StatelessWidget {
         SnackBar(content: Text("Error: ${e.toString()}")),
       );
     }
-  }*/
+  }
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
