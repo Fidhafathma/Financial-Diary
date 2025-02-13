@@ -2,8 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
 import 'package:myfirstapp/applogin.dart';
+//import 'package:myfirstapp/pinpage.dart';
 import 'package:myfirstapp/signup.dart';
 import 'firebase_options.dart';
+//import 'package:myfirstapp/newpinpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+
 
 class SignupPage extends StatefulWidget {
   @override
@@ -34,66 +37,120 @@ class _SignupPageState extends State<SignupPage> {
       );
     }
   }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("Sign Up"),
-          backgroundColor: Colors.transparent,
-          foregroundColor: Colors.black,
-          elevation: 0,
-        ),
-        body: Container(
-          decoration: BoxDecoration(
-              //image: DecorationImage(
-              //image: AssetImage('assets/background.jpeg'),
-              //fit: BoxFit.cover,
-              //),
+        backgroundColor: Colors.white,
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Text(
+                  "Sign Up",
+                  style: GoogleFonts.poppins(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF000957),
+                  ),
+                ),
               ),
-          //color: Color.blue,
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    labelText: "Phone number",
-                    border: OutlineInputBorder(),
+              SizedBox(height: 5),
+              Center(
+                child: Text(
+                  "Create your account",
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    color: Colors.black54,
                   ),
                 ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: InputDecoration(
-                    labelText: "Email",
-                    border: OutlineInputBorder(),
+              ),
+              SizedBox(height: 20),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Phone number",
+                  labelStyle: GoogleFonts.poppins(color: Colors.black54),
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon:
+                      Icon(Icons.phone, color: Color(0xFF000957)), // 📞 Icon
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957), width: 2),
                   ),
                 ),
-                SizedBox(height: 10),
-                TextField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  decoration: InputDecoration(
-                    labelText: "Password",
-                    border: OutlineInputBorder(),
+                style: GoogleFonts.poppins(color: Colors.black),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                keyboardType: TextInputType.emailAddress,
+                decoration: InputDecoration(
+                  labelText: "Email",
+                  labelStyle: GoogleFonts.poppins(color: Colors.black54),
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon:
+                      Icon(Icons.email, color: Color(0xFF000957)), // 📧 Icon
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957), width: 2),
                   ),
                 ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: _signUp,
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: Size(double.infinity, 50),
+                style: GoogleFonts.poppins(color: Colors.black),
+              ),
+              SizedBox(height: 10),
+              TextField(
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: "Password",
+                  labelStyle: GoogleFonts.poppins(color: Colors.black54),
+                  filled: true,
+                  fillColor: Colors.white,
+                  prefixIcon:
+                      Icon(Icons.lock, color: Color(0xFF000957)), // 🔒 Icon
+                  border: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957)),
                   ),
-                  child: Text("Sign Up"),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFF000957), width: 2),
+                  ),
                 ),
-              ],
-            ),
+                style: GoogleFonts.poppins(color: Colors.black),
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF000957),
+                  foregroundColor: Colors.white,
+                  minimumSize: Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+                child: Text(
+                  "Sign Up",
+                  style: GoogleFonts.poppins(
+                      fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
         ),
       ),
