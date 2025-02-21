@@ -18,22 +18,34 @@ class ForgotPasswordPage extends StatelessWidget {
           children: [
             const Text(
               "Enter your email to reset your password",
-              style: TextStyle(fontSize: 18, color: Colors.black54, fontFamily: 'Poppins'),
+
+              style: TextStyle(
+                  fontSize: 18, color: Colors.black54, fontFamily: 'Poppins'),
+
+              
+
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 20),
             TextField(
               controller: emailController,
               decoration: InputDecoration(
-                labelText: 'Email', labelStyle: TextStyle(fontFamily: 'Poppins'),
-                prefixIcon: const Icon(Icons.email,
-                    color: Color(0xFF000957)),
+
+                labelText: 'Email',
+                labelStyle: TextStyle(fontFamily: 'Poppins'),
+                prefixIcon: const Icon(Icons.email, color: Color(0xFF000957)),
+
+               
+
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(
-                      color: Color(0xFF000957)),
+
+                  borderSide: const BorderSide(color: Color(0xFF000957)),
+
+                 
+
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -43,7 +55,11 @@ class ForgotPasswordPage extends StatelessWidget {
               onPressed: () {
                 // Handle password reset logic
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Password reset link sent!", style: TextStyle(fontFamily: 'Poppins'))),
+
+                  const SnackBar(
+                      content: Text("Password reset link sent!",
+                          style: TextStyle(fontFamily: 'Poppins'))),
+
                 );
               },
               style: ElevatedButton.styleFrom(

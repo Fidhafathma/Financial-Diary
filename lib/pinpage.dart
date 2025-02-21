@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:myfirstapp/dashboard.dart';
 
@@ -11,23 +12,25 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final LocalAuthentication _localAuth = LocalAuthentication();
+  final LocalAuthentication _localAuth =
+      LocalAuthentication(); // Initialize Local Authentication
   final TextEditingController _pinController = TextEditingController();
   String _enteredPin = '';
-  final String correctPin = '1234'; // Change this to the actual user PIN
+  final String correctPin = '1234'; // Set your actual PIN
 
   @override
   void initState() {
     super.initState();
-    _authenticateWithBiometrics(); // Try fingerprint on start
+    _authenticateWithBiometrics(); // Try biometric authentication at startup
   }
 
+  /// **Biometric Authentication**
   Future<void> _authenticateWithBiometrics() async {
     try {
       bool isAuthenticated = await _localAuth.authenticate(
         localizedReason: 'Authenticate to access Monexo',
         options: const AuthenticationOptions(
-          biometricOnly: true, // Use fingerprint/face only
+          biometricOnly: true, // Use only biometrics (fingerprint/face)
           stickyAuth: true,
         ),
       );
@@ -39,6 +42,7 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+  /// **Handles Number Pad Press**
   void _onDigitPressed(String digit) {
     setState(() {
       if (_enteredPin.length < 4) {
@@ -57,6 +61,7 @@ class _SplashScreenState extends State<SplashScreen> {
     });
   }
 
+  /// **Navigate to Home Screen**
   void _navigateToHome() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.pushReplacement(
@@ -72,32 +77,29 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Gradient Background
+          // Background
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  Color.fromARGB(255, 255, 255, 255), // Top Left color
-                  Color.fromARGB(255, 255, 255, 255), // Bottom Right color
-                ],
+                colors: [Colors.white, Colors.white],
               ),
             ),
           ),
 
-          // Overlay Content
+          // PIN Entry UI
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // App Name
-              const Text(
+              // Title
+              Text(
                 'Enter The Pin',
-                style: TextStyle(
+                style: GoogleFonts.poppins(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(255, 41, 11, 238),
-                  shadows: [
+                  color: const Color(0xFF000957),
+                  shadows: const [
                     Shadow(
                       blurRadius: 5,
                       color: Colors.black45,
@@ -108,7 +110,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               const SizedBox(height: 40),
 
-              // PIN Input Display
+              // PIN Dots
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(4, (index) {
@@ -119,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: index < _enteredPin.length
-                          ? Color.fromARGB(255, 41, 11, 238)
+                          ? const Color(0xFF000957)
                           : const Color.fromARGB(77, 162, 159, 162),
                     ),
                   );
@@ -176,20 +178,25 @@ class _SplashScreenState extends State<SplashScreen> {
                     },
                     child: Container(
                       margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color:
-                            Color.fromARGB(255, 41, 11, 238).withOpacity(0.5),
+                        color: Color(0xFF000957), // Solid dark blue color
                       ),
                       alignment: Alignment.center,
-                      child: Text(
-                        buttonText,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Color.fromARGB(255, 253, 253, 253),
-                        ),
-                      ),
+                      child: buttonText == '←'
+                          ? const Icon(
+                              Icons.arrow_back, // Back arrow icon
+                              size: 28,
+                              color: Colors.white,
+                            )
+                          : Text(
+                              buttonText,
+                              style: GoogleFonts.poppins(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
                     ),
                   );
                 },
@@ -200,12 +207,14 @@ class _SplashScreenState extends State<SplashScreen> {
               GestureDetector(
                 onTap: _authenticateWithBiometrics,
                 child: const Icon(Icons.fingerprint,
-                    size: 50, color: Color.fromARGB(255, 41, 11, 238)),
+                    size: 50, color: Color(0xFF000957)),
               ),
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 'Use Fingerprint',
-                style: TextStyle(color: Color.fromARGB(255, 41, 11, 238)),
+                style: GoogleFonts.poppins(
+                  color: const Color(0xFF000957),
+                ),
               ),
             ],
           ),
