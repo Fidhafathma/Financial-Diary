@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dashboard.dart'; // Import the DashboardPage
 
+
+
+
+
 class SignupPage extends StatefulWidget {
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -94,8 +98,6 @@ class _SignupPageState extends State<SignupPage> {
       );
     }
   }
-
-  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -113,11 +115,13 @@ class _SignupPageState extends State<SignupPage> {
                   style: GoogleFonts.poppins(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
+
                     color: const Color(0xFF000957),
                   ),
                 ),
               ),
               const SizedBox(height: 5),
+
               Center(
                 child: Text(
                   "Create your account",
@@ -127,6 +131,7 @@ class _SignupPageState extends State<SignupPage> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 20),
               TextField(
                 keyboardType: TextInputType.emailAddress,
@@ -146,19 +151,27 @@ class _SignupPageState extends State<SignupPage> {
                   focusedBorder: OutlineInputBorder(
                     borderSide:
                         const BorderSide(color: Color(0xFF000957), width: 2),
+
+              
+
                   ),
                 ),
                 style: GoogleFonts.poppins(color: Colors.black),
               ),
+
               const SizedBox(height: 10),
               TextField(
                 obscureText: true,
                 controller: _passwordController,
+
+              
+
                 decoration: InputDecoration(
                   labelText: "Password",
                   labelStyle: GoogleFonts.poppins(color: Colors.black54),
                   filled: true,
                   fillColor: Colors.white,
+
                   prefixIcon: const Icon(Icons.lock, color: Color(0xFF000957)),
                   border: OutlineInputBorder(
                     borderSide: const BorderSide(color: Color(0xFF000957)),
@@ -169,10 +182,14 @@ class _SignupPageState extends State<SignupPage> {
                   focusedBorder: OutlineInputBorder(
                     borderSide:
                         const BorderSide(color: Color(0xFF000957), width: 2),
+
+                  
+
                   ),
                 ),
                 style: GoogleFonts.poppins(color: Colors.black),
               ),
+
               const SizedBox(height: 10),
               TextField(
                 obscureText: true,
@@ -207,6 +224,7 @@ class _SignupPageState extends State<SignupPage> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                 ),
+
                 child: Text(
                   "Sign Up",
                   style: GoogleFonts.poppins(

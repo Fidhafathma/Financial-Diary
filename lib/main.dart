@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
 import 'package:myfirstapp/add_transaction.dart';
 import 'package:myfirstapp/applogin.dart';
+
 import 'package:myfirstapp/pinpage.dart';
 //mort 'package:cloud_firestore/cloud_firestore.dart;
+
+
 import 'package:myfirstapp/signup.dart';
 import 'firebase_options.dart';
+//import 'package:myfirstapp/newpinpage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
