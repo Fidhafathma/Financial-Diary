@@ -41,6 +41,11 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin flutter_plugin_android_lifecycle, io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin", e);
     }
     try {
+      flutterEngine.getPlugins().add(new com.juliusgithaiga.flutter_sms_inbox.FlutterSmsInboxPlugin());
+    } catch (Exception e) {
+      Log.e(TAG, "Error registering plugin flutter_sms_inbox, com.juliusgithaiga.flutter_sms_inbox.FlutterSmsInboxPlugin", e);
+    }
+    try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.localauth.LocalAuthPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin local_auth_android, io.flutter.plugins.localauth.LocalAuthPlugin", e);
@@ -51,9 +56,9 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin path_provider_android, io.flutter.plugins.pathprovider.PathProviderPlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new com.shounakmulay.telephony.TelephonyPlugin());
+      flutterEngine.getPlugins().add(new com.baseflow.permissionhandler.PermissionHandlerPlugin());
     } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin telephony, com.shounakmulay.telephony.TelephonyPlugin", e);
+      Log.e(TAG, "Error registering plugin permission_handler_android, com.baseflow.permissionhandler.PermissionHandlerPlugin", e);
     }
   }
 }
