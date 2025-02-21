@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AddTransactionPage extends StatefulWidget {
   const AddTransactionPage({super.key});
@@ -10,35 +13,86 @@ class AddTransactionPage extends StatefulWidget {
 class _AddTransactionPageState extends State<AddTransactionPage> {
   bool isIncome = false;
   bool isExpense = true;
-  String selectedCategory = 'Transaction';
+  String selectedCategory = 'Shopping';
   String amount = '';
+  DateTime? selectedDate;
 
-  final List<String> categories = [
-    'Food',
-    'Education',
-    'Shopping',
-    'Transaction'
+  final List<Map<String, dynamic>> categories = [
+    {'name': 'Shopping', 'icon': Icons.shopping_bag},
+    {'name': 'Education', 'icon': Icons.school},
+    {'name': 'Food', 'icon': Icons.fastfood},
+    {'name': 'Electricity', 'icon': Icons.electrical_services},
+    {'name': 'Other', 'icon': Icons.more_horiz},
   ];
 
-  void _onNumberPressed(String value) {
-    setState(() {
-      if (value == 'X') {
-        if (amount.isNotEmpty) {
-          amount = amount.substring(0, amount.length - 1);
-        }
-      } else {
-        amount += value;
-      }
-    });
+  Future<void> _selectDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
   }
 
-  void _saveTransaction() {
-    if (amount.isNotEmpty) {
-      // TODO: Handle saving logic here
-      Navigator.pop(context); // Return to the dashboard
-    } else {
+  Future<void> _saveTransaction() async {
+    if (amount.isEmpty || amount == '0') {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Enter an amount before saving.")),
+        const SnackBar(
+          content: Text("Amount cannot be zero!"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Get the current user
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("No user is logged in!"),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    try {
+      // Save the transaction to the user's manual_entry collection
+      await FirebaseFirestore.instance
+          .collection('users') // Users collection
+          .doc(user.uid) // Document for the specific user (user's UID)
+          .collection('manual_entry') // Subcollection for manual entries
+          .add({
+        'date': selectedDate != null
+            ? DateFormat('yyyy-MM-dd').format(selectedDate!)
+            : DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        'category': selectedCategory,
+        'type': isIncome ? 'Income' : 'Expense',
+        'amount': double.parse(amount),
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Transaction stored successfully!"),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error saving transaction: $e"),
+          backgroundColor: Colors.red,
+        ),
       );
     }
   }
@@ -48,10 +102,18 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        title: const Text(
+          "Add Transaction",
+          style: TextStyle(
+            color: Color(0xFF000957),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
+        centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF000957)),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -60,9 +122,9 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
           TextButton(
             onPressed: _saveTransaction,
             child: const Text(
-              "save",
+              "Save",
               style: TextStyle(
-                color: Color(0xFF0F3D5F),
+                color: Color(0xFF000957),
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -75,11 +137,15 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 20),
+
             // Income/Expense Selection
             Row(
               children: [
-                Checkbox(
-                  value: isIncome,
+                const SizedBox(width: 20),
+                Radio(
+                  value: true,
+                  groupValue: isIncome,
                   onChanged: (value) {
                     setState(() {
                       isIncome = true;
@@ -87,9 +153,11 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     });
                   },
                 ),
-                const Text("income", style: TextStyle(fontSize: 18)),
-                Checkbox(
-                  value: isExpense,
+                const Text("Income", style: TextStyle(fontSize: 18)),
+                const SizedBox(width: 50),
+                Radio(
+                  value: true,
+                  groupValue: isExpense,
                   onChanged: (value) {
                     setState(() {
                       isIncome = false;
@@ -97,104 +165,161 @@ class _AddTransactionPageState extends State<AddTransactionPage> {
                     });
                   },
                 ),
-                const Text("expense", style: TextStyle(fontSize: 18)),
+                const Text("Expense", style: TextStyle(fontSize: 18)),
               ],
             ),
 
-            // Category Selection
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
+
+            // Select Category
             const Text(
-              "category:",
+              "Select Category:",
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF0F3D5F),
-              ),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF000957)),
             ),
-            Column(
+
+            const SizedBox(height: 10),
+
+            Wrap(
+              spacing: 20,
+              runSpacing: 10,
               children: categories.map((category) {
-                return CheckboxListTile(
-                  title: Text(
-                    category,
-                    style: const TextStyle(fontStyle: FontStyle.italic),
-                  ),
-                  value: selectedCategory == category,
-                  onChanged: (value) {
+                return GestureDetector(
+                  onTap: () {
                     setState(() {
-                      selectedCategory = category;
+                      selectedCategory = category['name'];
                     });
                   },
-                  activeColor: const Color(0xFF0F3D5F),
+                  child: Container(
+                    width: (MediaQuery.of(context).size.width / 2) - 40,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      color: selectedCategory == category['name']
+                          ? Colors.blue.withOpacity(0.2)
+                          : Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      children: [
+                        Icon(
+                          category['icon'],
+                          size: 30,
+                          color: selectedCategory == category['name']
+                              ? Color(0xFF000957)
+                              : Colors.black,
+                        ),
+                        const SizedBox(height: 5),
+                        Text(category['name'],
+                            style: const TextStyle(fontSize: 14)),
+                      ],
+                    ),
+                  ),
                 );
               }).toList(),
             ),
 
-            // Amount Display
-            const SizedBox(height: 10),
-            Container(
-              padding: const EdgeInsets.all(15),
-              alignment: Alignment.centerRight,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: const Color(0xFF0F3D5F),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                amount.isEmpty ? "0" : amount,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+            const SizedBox(height: 20),
+
+            // Select Date
+            Row(
+              children: [
+                const Text(
+                  "Select Date:",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Color(0xFF000957)),
                 ),
-              ),
+                const SizedBox(width: 20),
+                GestureDetector(
+                  onTap: () => _selectDate(context),
+                  child: Row(
+                    children: [
+                      Text(
+                        selectedDate != null
+                            ? DateFormat('dd/MM/yyyy').format(selectedDate!)
+                            : "Choose a date",
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.black),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.calendar_today, color: Color(0xFF000957))
+                    ],
+                  ),
+                ),
+              ],
             ),
 
-            // Number Pad
-            const SizedBox(height: 10),
-            Expanded(
-              child: GridView.builder(
-                itemCount: 12,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 1.5,
-                ),
-                itemBuilder: (context, index) {
-                  String buttonText;
-                  if (index < 9) {
-                    buttonText = '${index + 1}';
-                  } else if (index == 9) {
-                    buttonText = '0';
-                  } else if (index == 10) {
-                    buttonText = 'X'; // Backspace
-                  } else {
-                    return const SizedBox.shrink(); // Empty slot
-                  }
+            const SizedBox(height: 20),
 
-                  return GestureDetector(
-                    onTap: () => _onNumberPressed(buttonText),
-                    child: Container(
-                      margin: const EdgeInsets.all(8),
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF0F3D5F),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Text(
-                        buttonText,
-                        style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  );
-                },
+            // Amount Display
+            GestureDetector(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AmountInputDialog(
+                    onAmountChanged: (value) {
+                      setState(() {
+                        amount = value;
+                      });
+                    },
+                  ),
+                );
+              },
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.all(10),
+                  alignment: Alignment.center,
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  decoration: BoxDecoration(
+                    color: Color(0xFF000957),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    amount.isEmpty ? "0" : amount,
+                    style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  ),
+                ),
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+// Amount Input Dialog
+class AmountInputDialog extends StatelessWidget {
+  final Function(String) onAmountChanged;
+
+  const AmountInputDialog({super.key, required this.onAmountChanged});
+
+  @override
+  Widget build(BuildContext context) {
+    String inputAmount = '';
+    return AlertDialog(
+      title: const Text("Enter Amount"),
+      content: TextField(
+        keyboardType: TextInputType.number,
+        onChanged: (value) {
+          inputAmount = value;
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            onAmountChanged(inputAmount);
+            Navigator.pop(context);
+          },
+          child: const Text("✔"),
+        ),
+      ],
     );
   }
 }

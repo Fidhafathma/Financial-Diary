@@ -1,0 +1,1 @@
+ C:\\Users\\ASUS\\OneDrive\\Documents\\flutterproject_tinker\\myfirstapp\\.dart_tool\\flutter_build\\41a9a6bbff406402f59f1297f2c84c9b\\native_assets.yaml: 
