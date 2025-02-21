@@ -1,8 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart'; // Import Google Fonts
+import 'package:myfirstapp/add_transaction.dart';
 import 'package:myfirstapp/applogin.dart';
-//import 'package:myfirstapp/pinpage.dart';
+
+import 'package:myfirstapp/pinpage.dart';
+//mort 'package:cloud_firestore/cloud_firestore.dart;
+
+
 import 'package:myfirstapp/signup.dart';
 import 'firebase_options.dart';
 //import 'package:myfirstapp/newpinpage.dart';
@@ -22,16 +27,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter App',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        textTheme: GoogleFonts.poppinsTextTheme(), // Apply Poppins font
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFF000957)), // Theme color
-        useMaterial3: true,
-      ),
-      home: const WelcomePage(),
-    );
+        title: 'Flutter App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          textTheme: GoogleFonts.poppinsTextTheme(), // Apply Poppins font
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color(0xFF000957)), // Theme color
+          useMaterial3: true,
+        ),
+        home: WelcomePage());
   }
 }
 

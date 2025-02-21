@@ -1,18 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myfirstapp/add_transaction.dart';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
   @override
+  _DashboardPageState createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  DateTime selectedDate = DateTime.now();
+
+  // Function to open the date picker
+  Future<void> _pickDate(BuildContext context) async {
+    DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2100),
+    );
+
+    if (pickedDate != null && pickedDate != selectedDate) {
+      setState(() {
+        selectedDate = pickedDate;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    String currentMonth = DateFormat('MMMM').format(DateTime.now());
+    String currentMonthYear = DateFormat('MMMM yyyy').format(selectedDate);
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.menu, color: Colors.black),
@@ -28,31 +52,49 @@ class DashboardPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: const Color(0xFF0F3D5F),
+                color: const Color(0xFF000957),
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    '〈 $currentMonth 〉',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+                  // Month & Year (Clickable)
+                  GestureDetector(
+                    onTap: () => _pickDate(context), // Opens Date Picker
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '〈 $currentMonthYear 〉',
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 5),
+                        const Icon(Icons.calendar_today,
+                            color: Colors.white, size: 20), // Calendar Icon
+                      ],
                     ),
                   ),
                   const SizedBox(height: 15),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Text(
-                        'Income  ',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        'Income',
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
                       ),
                       Text(
                         'Expense',
-                        style: TextStyle(color: Colors.white, fontSize: 18),
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
                       ),
                     ],
                   ),
@@ -61,66 +103,74 @@ class DashboardPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // Recent Transactions Title
-            const Text(
-              'Recent transactions',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF0F3D5F),
+            // Recent Transactions
+            Container(
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: const Color(0xFF000957),
+                borderRadius: BorderRadius.circular(20),
               ),
-            ),
-            const SizedBox(height: 10),
-
-            // Transactions List
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.blue.shade100,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: ListView(
-                  children: const [
-                    TransactionTile(
-                      title: 'Grocery Shopping',
-                      amount: '- \$50',
-                      isExpense: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Recent Transactions',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
                     ),
-                    TransactionTile(
-                      title: 'Salary',
-                      amount: '+ \$2000',
-                      isExpense: false,
+                  ),
+                  const SizedBox(height: 10),
+                  Column(
+                    children: const [
+                      TransactionTile(
+                          title: 'Grocery Shopping',
+                          amount: '- Rs 50',
+                          isExpense: true),
+                      TransactionTile(
+                          title: 'Salary',
+                          amount: '+ Rs 2000',
+                          isExpense: false),
+                      TransactionTile(
+                          title: 'Electric Bill',
+                          amount: '- Rs 100',
+                          isExpense: true),
+                      TransactionTile(
+                          title: 'Freelance Work',
+                          amount: '+ Rs 500',
+                          isExpense: false),
+                    ],
+                  ),
+                  Transform.translate(
+                    offset: const Offset(0, -5),
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'View More',
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(width: 5),
+                          const Icon(Icons.keyboard_arrow_down,
+                              color: Colors.white),
+                        ],
+                      ),
                     ),
-                    TransactionTile(
-                      title: 'Electric Bill',
-                      amount: '- \$100',
-                      isExpense: true,
-                    ),
-                    TransactionTile(
-                      title: 'Freelance Work',
-                      amount: '+ \$500',
-                      isExpense: false,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
       bottomNavigationBar: BottomNavBar(),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white,
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const AddTransactionPage()),
-          );
-        },
-        child: const Icon(Icons.add, color: Colors.black),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
@@ -145,10 +195,11 @@ class TransactionTile extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(title, style: const TextStyle(fontSize: 16)),
+          Text(title,
+              style: GoogleFonts.poppins(fontSize: 16, color: Colors.white)),
           Text(
             amount,
-            style: TextStyle(
+            style: GoogleFonts.poppins(
               fontSize: 16,
               fontWeight: FontWeight.bold,
               color: isExpense ? Colors.red : Colors.green,
@@ -160,24 +211,43 @@ class TransactionTile extends StatelessWidget {
   }
 }
 
-// Bottom Navigation Bar
+// Bottom Navigation Bar with Plus Button
 class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
       shape: const CircularNotchedRectangle(),
       notchMargin: 10,
-      color: const Color(0xFF0F3D5F),
+      color: const Color(0xFF000957),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           IconButton(
-            icon: const Icon(Icons.home, color: Colors.white),
+            icon: const Icon(Icons.home, color: Colors.white, size: 35),
             onPressed: () {},
           ),
-          const SizedBox(width: 50), // Space for Floating Action Button
+          Container(
+            height: 55,
+            width: 55,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
+            child: Center(
+              child: IconButton(
+                icon: const Icon(Icons.add, color: Color(0xFF000957), size: 35),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AddTransactionPage()),
+                  );
+                },
+              ),
+            ),
+          ),
           IconButton(
-            icon: const Icon(Icons.pie_chart, color: Colors.white),
+            icon: const Icon(Icons.pie_chart, color: Colors.white, size: 35),
             onPressed: () {},
           ),
         ],
